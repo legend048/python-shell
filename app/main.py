@@ -2,6 +2,7 @@ import sys
 import shlex
 import shutil
 import subprocess
+import os
 
 
 def main():
@@ -67,7 +68,9 @@ def main():
             continue
     
         try:
-            subprocess.run([exe, *argv])
+            # you can both spawn a new process or execute the command directly
+            # subprocess.run([exe, *argv], executable=exe)
+            os.system(line)
         except PermissionError:
             print(f"{command}: permission denied")
         except OSError as e:
