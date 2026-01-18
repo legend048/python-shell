@@ -6,7 +6,7 @@ import os
 
 
 def main():
-    builtin_commands = ["exit", "echo", "help", "type"]
+    builtin_commands = ["exit", "echo", "help", "type", "pwd", "cd"]
     
     def cmd_echo(argv):
         print(" ".join(argv))
@@ -30,10 +30,41 @@ def main():
         else:
             print(f"{name}: not found")
     
+    def cmd_pwd(_argv):
+        print(os.getcwd())
+    
+    def cmd_cd(argv):
+        if not argv:
+            print("cd: missing operand")
+            return
+    
+        path = argv[0]
+        try:
+            if path == "~":
+                path = os.path.expanduser("~")
+            os.chdir(path)
+        except FileNotFoundError:
+            print(f"cd: {path}: No such file or directory")
+    
+    def cmd_ls(argv):
+        if not argv:
+            print("ls: missing operand")
+            return
+    
+        path = argv[0]
+        try:
+            files = os.listdir(path)
+            print("\n".join(files))
+        except FileNotFoundError:
+            print(f"ls: {path}: No such file or directory")
+            
     handlers = {
         "echo": cmd_echo,
         "help": cmd_help,
         "type": cmd_type,
+        "pwd": cmd_pwd,
+        "cd": cmd_cd,
+        "ls": cmd_ls
     }
     
     while True:
